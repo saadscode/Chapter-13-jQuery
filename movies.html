@@ -4,6 +4,50 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Movies App</title>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.js"
+      integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+      crossorigin="anonymous"
+    ></script>
   </head>
-  <body></body>
+  <body>
+    <h1>My Favorite Movies</h1>
+    <form id="movie-form">
+      <label for="title">Title:</label>
+      <input type="text" id="title" required />
+      <label for="rating">Rating:</label>
+      <input type="number" id="rating" min="1" max="10" required />
+      <button type="submit">Add Movie Name</button>
+    </form>
+    <div id="movie-list" class="movie"></div>
+
+    <script>
+        $(#movie-form).submit(function() {
+            event.preventDefault();
+
+            const title = $("#title").val();
+            const rating = $("#rating").val();
+
+            addMovie(title, rating);
+
+            $("#title").val("");
+            $("#rating").val("");
+        });
+
+        function addMovie(title, rating) {
+        const $movieList = $("#movie-list");
+
+        const $movie = $("<div>").addClass("movie");
+        const $movieInfo = $("<p>").text(`Title: ${title}, Rating: ${rating}`);
+        const $removeButton = $("<button>").text("Remove");
+
+        $removeButton.click(function() {
+          $movie.remove();
+        });
+
+        $movie.append($movieInfo, $removeButton);
+        $movieList.append($movie);
+      };
+    </script>
+  </body>
 </html>

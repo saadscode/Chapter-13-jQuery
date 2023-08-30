@@ -3,51 +3,132 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Movies App</title>
-    <script
-      src="https://code.jquery.com/jquery-3.7.0.js"
-      integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
-      crossorigin="anonymous"
-    ></script>
+    <title>My Favorite Movies</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+      h1 {
+        margin-top: 20px;
+      }
+      #movie-form {
+        margin-top: 20px;
+      }
+      #movie-list {
+        margin-top: 20px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: auto;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      th.sortable {
+        cursor: pointer;
+      }
+      .delete-btn {
+        background-color: red;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      .submit-btn {
+        background-color: blue;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
     <h1>My Favorite Movies</h1>
     <form id="movie-form">
       <label for="title">Title:</label>
-      <input type="text" id="title" required />
+      <input type="text" id="title" minlength="2" required />
       <label for="rating">Rating:</label>
-      <input type="number" id="rating" min="1" max="10" required />
-      <button type="submit">Add Movie Name</button>
+      <input type="number" id="rating" min="0" max="10" required />
+      <button type="button" class="submit-btn" onclick="addMovie()">
+        Submit
+      </button>
     </form>
-    <div id="movie-list" class="movie"></div>
+    <div id="movie-list">
+      <table>
+        <thead>
+          <tr>
+            <th class="sortable" onclick="sortTable(0)">Title</th>
+            <th class="sortable" onclick="sortTable(1)">Rating</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody id="movie-table-body"></tbody>
+      </table>
+    </div>
 
     <script>
-        $(#movie-form).submit(function() {
-            event.preventDefault();
+      const movieTableBody = document.getElementById("movie-table-body");
+      const titleInput = document.getElementById("title");
+      const ratingInput = document.getElementById("rating");
 
-            const title = $("#title").val();
-            const rating = $("#rating").val();
+      function addMovie() {
+        const title = titleInput.value;
+        const rating = ratingInput.value;
 
-            addMovie(title, rating);
+        if (title.length < 2 || rating < 0 || rating > 10) {
+          alert(
+            "Please enter valid Title (min. 2 characters) and Rating (0-10)."
+          );
+          return;
+        }
 
-            $("#title").val("");
-            $("#rating").val("");
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+        <td>${title}</td>
+        <td>${rating}</td>
+        <td><button class="delete-btn" onclick="deleteRow(this)">Delete</button></td>
+      `;
+
+        movieTableBody.appendChild(newRow);
+        titleInput.value = "";
+        ratingInput.value = "";
+      }
+
+      function deleteRow(button) {
+        const row = button.parentNode.parentNode;
+        movieTableBody.removeChild(row);
+      }
+
+      function sortTable(column) {
+        const rows = Array.from(movieTableBody.rows);
+        const isAscending = column === 0 ? 1 : -1;
+
+        rows.sort((a, b) => {
+          const aValue = a.cells[column].textContent;
+          const bValue = b.cells[column].textContent;
+          if (column === 0) {
+            return isAscending * aValue.localeCompare(bValue);
+          } else {
+            return isAscending * (parseFloat(aValue) - parseFloat(bValue));
+          }
         });
 
-        function addMovie(title, rating) {
-        const $movieList = $("#movie-list");
+        while (movieTableBody.firstChild) {
+          movieTableBody.removeChild(movieTableBody.firstChild);
+        }
 
-        const $movie = $("<div>").addClass("movie");
-        const $movieInfo = $("<p>").text(`Title: ${title}, Rating: ${rating}`);
-        const $removeButton = $("<button>").text("Remove");
-
-        $removeButton.click(function() {
-          $movie.remove();
+        rows.forEach((row) => {
+          movieTableBody.appendChild(row);
         });
-
-        $movie.append($movieInfo, $removeButton);
-        $movieList.append($movie);
-      };
+      }
     </script>
   </body>
 </html>

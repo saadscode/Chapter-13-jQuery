@@ -74,6 +74,7 @@
         <div class="col-sm-4">
           Red
           <input
+            id="red"
             class="form-control"
             type="number"
             min="0"
@@ -84,6 +85,7 @@
         <div class="col-sm-4">
           Blue
           <input
+            id="blue"
             class="form-control"
             type="number"
             min="0"
@@ -94,6 +96,7 @@
         <div class="col-sm-4">
           Green
           <input
+            id="green"
             class="form-control"
             type="number"
             min="0"
@@ -121,6 +124,36 @@
 
       // 7. When you change the numbers in the three inputs on the bottom, the background color
       // of the body should change to match whatever the three values in the inputs are.
+
+      const red = $("#red");
+      const blue = $("#blue");
+      const green = $("#green");
+
+      $(document.body).css(
+        "background-color",
+        `rgb(${red.val()}, ${green.val()}, ${blue.val()})`
+      );
+
+      red.on("change", function () {
+        $(document.body).css(
+          "background-color",
+          `rgb(${red.val()}, ${green.val()}, ${blue.val()})`
+        );
+      });
+
+      green.on("change", function () {
+        $(document.body).css(
+          "background-color",
+          `rgb(${red.val()}, ${green.val()}, ${blue.val()})`
+        );
+      });
+
+      blue.on("change", function () {
+        $(document.body).css(
+          "background-color",
+          `rgb(${red.val()}, ${green.val()}, ${blue.val()})`
+        );
+      });
 
       $("img").click(function () {
         $(this).remove();
